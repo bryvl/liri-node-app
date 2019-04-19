@@ -33,8 +33,32 @@ var runCommand = function(whichCommand, searchTerm) {
         break;
     default:
         console.log("Error: Please type in a valid command...");
-    }
+    };
 };
+
+// defining function for movie-this command
+var bandsSearch = function(artist) {
+    var queryURL = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp";
+  
+    axios.get(queryURL).then(function(response) {
+        var returnedData = response.data;
+        // console.log(returnedData);
+        
+        console.log("\nConcert Results For " + artist + ":");
+  
+        for (var i = 0; i < returnedData.length; i++) {
+            var show = returnedData[i];
+            
+            console.log("\n");
+            console.log((i + 1) + ": " + show.venue.city + ", " + (show.venue.region || show.venue.country));
+            console.log("Venue: " + show.venue.name);
+            console.log("Concert Date: " + moment(show.datetime).format("MM/DD/YYYY"));
+            console.log("--------------------------------");
+        };
+    });
+};
+
+
 
 // defining function for spotify-this-song command
 var spotifySearch = function(song) {
