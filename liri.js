@@ -36,6 +36,33 @@ var runCommand = function(whichCommand, searchTerm) {
     }
 };
 
+// defining function for spotify-this-song command
+var spotifySearch = function(song) {
+    // song isn't working here as undefined or as process.argv < 3 either. 
+    if (song === undefined) {
+      song = "The Sign";
+    }
+  
+    spotify.search({type: 'track', query: song}, function(err, data) {
+        if (err) {
+            return console.log("Error occurred: " + err);
+        }
+    
+        var songs = data.tracks.items;
+
+        for (var i = 0; i < songs.length; i++) {
+            console.log(i);
+            // not getting the artist name back for some reason
+            console.log("Artist(s): " + songs[i].artists.name);
+            console.log("Song Name: " + songs[i].name);
+            // not every song has a preview url
+            console.log("Preview Song: " + songs[i].preview_url);
+            console.log("Album: " + songs[i].album.name);
+            console.log("-----------------------------------\n");
+        }
+    });
+};
+
 
 // defining function for 'movie-this' command
 var omdbSearch = function(movie) {
@@ -70,6 +97,17 @@ var omdbSearch = function(movie) {
         
         }
     );
+};
+
+// use random.txt to get whatever its contents are and run those through Liri
+// should work on any command, not just default spotify search text put in
+var doWhatItSays = function() {
+    // fs readfile to take 
+    fs.readFile("random.txt", "utf8", function(error, data) {
+        console.log(data);
+        var dataArray = data.split(",");
+        runCommand(dataArray[0], dataArray[1]);
+    });
 };
 
 runCommand(command, runCommandOn);
